@@ -1,25 +1,46 @@
-import logo from './logo.svg';
-import './App.css';
+// src/App.js
+import React, { useState } from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import ProductListing from './pages/ProductListing';
+import { ThemeProvider, createGlobalStyle } from 'styled-components';
+import ThemeToggle from './components/ThemeToggle';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+const lightTheme = {
+    background: '#ffffff',
+    text: '#000000',
+};
+
+const darkTheme = {
+    background: '#333333',
+    text: '#ffffff',
+};
+
+const GlobalStyle = createGlobalStyle`
+  body {
+    background-color: ${({ theme }) => theme.background};
+    color: ${({ theme }) => theme.text};
+    transition: all 0.3s ease;
+  }
+`;
+
+const App = () => {
+    const [isDarkMode, setIsDarkMode] = useState(false);
+
+    const toggleTheme = () => {
+        setIsDarkMode(!isDarkMode);
+    };
+
+    return (
+        <ThemeProvider theme={isDarkMode ? darkTheme : lightTheme}>
+            <GlobalStyle />
+            <Router>
+                <ThemeToggle toggleTheme={toggleTheme} />
+                <Routes>
+                    <Route path="/" element={<ProductListing />} />
+                </Routes>
+            </Router>
+        </ThemeProvider>
+    );
+};
 
 export default App;
